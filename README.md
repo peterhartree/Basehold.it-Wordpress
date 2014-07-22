@@ -1,15 +1,21 @@
 WordPress Baseline Grid
 =====================
 Contributors: peterhartree
+
 Donate link: http://givingwhatwecan.org/
+
 Tags: baseline grid, baseline overlay, baseline, typography
+
 Requires at least: 3.0.1
+
 Tested up to: 3.8.1
+
 Stable tag: 1.0
+
 License: GPLv2 or later
+
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Convenient access to Dan Eden's baseline grid overlay service, Basehold.it.
 
 == Description ==
 
@@ -23,7 +29,8 @@ Append **?bl** to a url to get a baseline with default color and height. Use **b
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Frequently Asked Questions ==
-= I've appended ?bl to my page url but I can't see the grid overlay? =
+
+I've appended ?bl to my page url but I can't see the grid overlay?
 
 The default grid colour is **white**. So, if you have a mostly white website, you might struggle to see it unless you change the colour using one of the methods described above.
 
