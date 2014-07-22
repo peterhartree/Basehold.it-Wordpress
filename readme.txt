@@ -1,5 +1,4 @@
-WordPress Baseline Grid
-=====================
+=== WordPress Baseline Grid ===
 Contributors: peterhartree
 Donate link: http://givingwhatwecan.org/
 Tags: baseline grid, baseline overlay, baseline, typography

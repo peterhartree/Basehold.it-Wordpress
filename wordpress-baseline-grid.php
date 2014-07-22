@@ -1,8 +1,13 @@
 <?php
 /*
-Plugin Name: Basehold.it for Wordpress
+Plugin Name: WordPress Baseline Grid
 Plugin URI: http://web.peterhartree.co.uk
-Description: Grants Wordpress theme developers (even more) convenient access to Dan Eden's Basehold.it baseline grid overlay. Append ?bl to a url to get a baseline with default color and height. Use bl=x and col=x parameters to specify on the fly, or adjust the default as needed via the plugin settings page.
+Description: Gives theme developers convenient access to Dan Eden's
+  baseline grid overlay service (Basehold.it). Append <strong>?bl</strong>
+  to a url to get a baseline with default color and height. Use
+  <strong>bl=INT</strong> and <strong>col=HEX</strong> parameters to adjust
+  grid options on the fly, or tailor the default as appropriate via the
+  <a href="tools.php?page=basehold-it">plugin settings</a> page.
 Version: 1.0
 Author: Peter Hartree
 Author URI: http://web.peterhartree.co.uk
@@ -19,9 +24,10 @@ function basehold_it() {
     $baseline = $_GET['bl'];
   endif;
 
-  /* correct invalid user input */
+  /* correct input if px unit supplied unnecessarily */
   $baseline = str_replace('px', '', $baseline);
 
+  /* ignore invalid input */
   if(!is_numeric($baseline)):
     $baseline = get_option('basehold_it_default_height');
   endif;
@@ -29,7 +35,7 @@ function basehold_it() {
   if(isset($_GET['col'])):
     $baseline_color = $_GET['col'];
 
-    /* correct invalid user input */
+    /* correct invalid input */
     if($baseline_color == 'white'): $baseline_color = 'FFFFFF'; endif;
     if(strlen($baseline_color) == 3): $baseline_color = $baseline_color . $baseline_color; endif;
 
@@ -46,6 +52,7 @@ function basehold_it() {
   wp_enqueue_style( 'basehold-it', 'http://basehold.it/'.$baseline.'/'.$baseline_color);
 }
 
+/* apply overlay */
 if(isset($_GET['bl']) || get_option('basehold_it_permanent')):
   add_action( 'wp_enqueue_scripts', 'basehold_it' );
 endif;
@@ -57,14 +64,16 @@ function basehold_it_options() {
 ?>
   <div class="wrap">
   <h2>Basehold.it</h2>
-  <hr>
-  <h3>Instructions</h3>
-  <p>The simplest way to apply the grid overlay is to add a <strong>?bl</strong> querystring to the end of any URL on your site. So:</p>
-  <blockquote><em>http://yoursite.com/</em> would become <em>http://yoursite.com/<strong>?bl</strong></em></blockquote>
-  <p>Load a URL in this form and you'll see the grid applied, with the height and color settings specified below.</p>
-  <hr>
-  <h3>Settings</h3>
+
+  <p>To apply the grid overlay, add <strong>?bl</strong> to the end of any URL on your site. So:</p>
+  <blockquote><em><?php echo get_site_url(); ?></em> would become <em><a href="<?php echo get_site_url(); ?>?bl" target="_blank"><?php echo get_site_url(); ?><strong>?bl</strong></a></em></blockquote>
+  <p><strong>The default grid colour is white</strong>, so if you've got a mostly white site and don't see much, try changing the color setting, below.</p>
+  <p>&nbsp;</p>
   <form method="post" action="options.php">
+    <legend style="padding: 0; margin: 0;">
+      <h3>Settings</h3>
+    </legend>
+    <p>Configure the default baseline using the fields below. This is the baseline that shows when you append <strong>?bl</strong> to a URL. </p>
     <?php settings_fields( 'basehold_it_settings' ); ?>
     <?php do_settings_sections( 'basehold_it_settings' ); ?>
 
@@ -84,14 +93,14 @@ function basehold_it_options() {
       </tr>
 
       <tr valign="top">
-        <th scope="row">Show permanently</th>
+        <th scope="row">Always on</th>
           <td>
             <input type="checkbox" name="basehold_it_permanent" value="<?php echo get_option('basehold_it_permanent'); ?>" />
-            <p>If this field is checked, the grid will <strong>always</strong> show.</p>
           </td>
       </tr>
     </table>
-    <p><strong>N.B.</strong> If you like, you can specify a baseline height and color on the fly. Just append <strong>?bl=NUMBER&col=HEX</strong> to any page URL.</p>
+
+    <p>If you prefer, you can specify baseline height and color on the fly. Just append <strong>?bl=NUMBER&col=HEX</strong> to a URL.</p>
 
     <?php submit_button(); ?>
   </form>
@@ -117,7 +126,6 @@ function basehold_it_activate() {
   add_option( 'basehold_it_permanent', false, '', 'yes' );
   add_option( 'basehold_it_default_height', '24', '', 'yes' );
   add_option( 'basehold_it_default_color', 'FFFFFF', '', 'yes' );
-
 }
 
 register_activation_hook( __FILE__, 'basehold_it_activate' );
@@ -131,5 +139,4 @@ function basehold_it_deactivate() {
   unregister_setting( 'basehold_it_settings', 'basehold_it_default_color' );
 }
 
-register_deactivation_hook( __FILE__, 'myplugin_deactivate' );
-
+register_deactivation_hook( __FILE__, 'basehold_it_deactivate' );
